@@ -4,32 +4,31 @@ import numpy as np
 import datetime
 from datetime import date
 
-# 関数定義
-def logDebug(msg:str):
-    st.session_state.log_count+=1
-    st.session_state.debug_message+=f"{st.session_state.log_count}:{msg}\n" #ユーザー入力記録
-
-# 初期化
-## ページ設定
+# ページ設定
 st.set_page_config(
     page_title="カレンダー",
     layout="wide"
 )
 
-## デバッグ用メッセージ作成
+# サイドバー関連
+## 関数定義
+def logDebug(msg:str):
+    st.session_state.log_count+=1
+    st.session_state.debug_message+=f"{st.session_state.log_count}:{msg}\n" #ユーザー入力記録
+
+## 初期化
+### デバッグ用メッセージ関連変数宣言
 if "debug_message" not in st.session_state:
     st.session_state.debug_message=""
 if "log_count" not in st.session_state:
     st.session_state.log_count=0
 
-## サイドバーのどのタブを表示するか
 if "side_bar_id" not in st.session_state:
-    st.session_state.side_bar_id=1 # 初期はメインメニューで    
+    st.session_state.side_bar_id=1 # サイドバーのどのタブを表示するか_初期はメインメニューで    
     # 0: デバッグログ確認
     # 1: メインメニューサイドバー
 
-
-## サイドバー関連
+## メイン部分
 with st.sidebar:
     #サイドバーの表示タブ選択ボタン
     option=st.selectbox(
