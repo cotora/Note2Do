@@ -22,3 +22,10 @@ streamlitを使う方針
 
 ・WSL+GitHub連携
 _GHコマンドを見てみる．
+
+・ワークシートURL
+https://docs.google.com/presentation/d/1YLFH4EMAZI_F1faT0MmnIJIUzeZRPjItbXIDsMSNc88/edit?usp=drive_link
+
+・ひな形コード生成AI
+https://claude.ai/
+https://v0.dev/chat
