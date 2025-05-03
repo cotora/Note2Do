@@ -6,6 +6,7 @@ from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import PromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 from pydantic import BaseModel, ValidationError
+from dotenv import load_dotenv
 
 
 class Task(BaseModel):
@@ -25,6 +26,7 @@ def extract_task(text: str) -> Optional[Task]:
         Task|None: 抽出したタスク
     """
     # APIキーの取得
+    load_dotenv()
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         print("環境変数GEMINI_API_KEYが設定されていません")
