@@ -20,6 +20,9 @@ streamlitを使う方針
 ・New-Item -Type File パス名
 ・Move-Item -Pass 対象ファイルパス -Destination 目的地ファイルパス名
 
+・Streamlit 関連
+st.columns(cols):cols列だけstを取得でき，ボタンの行列を作成可能
+
 ・WSL+GitHub連携
 _GHコマンドを見てみる．
 

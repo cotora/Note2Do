@@ -1,14 +1,36 @@
+'''
+Edited By Eidome Kou (2025/5/3)
+'''
 import streamlit as st
-import pandas as pd
-import numpy as np
-import datetime
-from datetime import date
+from datetime import date,timedelta
+
+# 定数宣言
+NIL=-1
+MAX_MONTH=12
+DAYS_ON_WEEK=7
+MIN_SELECTED_YEAR=1990
 
 # ページ設定
 st.set_page_config(
     page_title="カレンダー",
     layout="wide"
 )
+
+# 日時設定関連
+## ユーザーが指定している年，月の設定
+if "selected_year" not in st.session_state:
+    st.session_state.selected_year=date.today().year
+if "selected_month" not in st.session_state:
+    st.session_state.selected_month=date.today().month
+
+## 年，月，日を選んでもらう
+st.session_state.selected_year=st.selectbox(
+    "Select the year",
+    [i for i in range(MIN_SELECTED_YEAR,date.today().year+1)])
+
+st.session_state.selected_month=st.selectbox(
+    "Select the year",
+    [i for i in range(1,MAX_MONTH+1)])
 
 # サイドバー関連
 ## 関数定義
@@ -45,8 +67,8 @@ with st.sidebar:
         debug_str="" #デバッグ記録出力用文字列
         for id,msg in enumerate(st.session_state.debug_message):
             debug_str+=f"number:{id}:{msg}\n"
-        st.text_area("Debug Log",st.session_state.debug_message)
-    elif st.session_state.side_bar_id==1:
+        st.text_area("content",st.session_state.debug_message)
+    elif st.session_state.side_bar_id==1:#メインサイドバー表示
         st.markdown("### メニュー")
         if st.button("① カレンダー"):
             logDebug("カレンダーボタン押下")#ユーザー入力記録
@@ -61,13 +83,52 @@ with st.sidebar:
             #音声認識画面の呼び出し
             pass
 
+# 初期化部分
+
+## 選択された月の1日を取得
+first_day=date(st.session_state.selected_year,st.session_state.selected_month,1)
+
+## 選択されたの1日の曜日を，日曜：0，月曜：1，...として取得
+now_weekday=(first_day.weekday()+1)%DAYS_ON_WEEK
+
+## 選択された月の最終日取得
+next_month_first_day=date(
+    first_day.year+(1 if first_day.month==MAX_MONTH else 0),
+    (first_day.month%MAX_MONTH)+1,
+    1
+)
+current_month_last_day=next_month_first_day-timedelta(days=1)
+
+## 各日の日付をlistで保持
+month_info=[[NIL for _ in range(DAYS_ON_WEEK)] for _ in range((current_month_last_day.day+now_weekday+DAYS_ON_WEEK-1)//DAYS_ON_WEEK)]
+
+count=1  #現在の日
+now_row=0 #現在何週目か(0-indexed)
+
+while count<current_month_last_day.day:
+    #現在のマスに日を記録
+    month_info[now_row][now_weekday]=count
+    #次のマス位置に更新
+    now_weekday=(now_weekday+1)%DAYS_ON_WEEK
+    if now_weekday==0:
+        now_row+=1
+    count+=1
+month_info[now_row][now_weekday]=count
+
 # メイン部分
 
-## 今日の日付を取得
-today = date.today()
-current_year = today.year
-current_month = today.month
-current_day = today.day
-
 ## 月をタイトルとして表示
-st.title(f"{today.month} 月")
+st.title(f"{first_day.month} 月")
+
+clicked=NIL
+## カレンダー形式でボタン表示
+for i in range(len(month_info)):
+    button_col=st.columns(DAYS_ON_WEEK)
+    for j in range(DAYS_ON_WEEK):
+        if month_info[i][j]!=NIL:
+            button_id=first_day.year*10000+first_day.month*100+month_info[i][j] #ボタンIDは年月日をそのまま並べたもので
+            if button_col[j].button(str(month_info[i][j])):
+                clicked=button_id
+
+if clicked!=NIL:
+    logDebug(str(clicked)) #ユーザー入力記録
