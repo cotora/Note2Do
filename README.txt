@@ -12,7 +12,7 @@ streamlitを使う方針
 │
 ├git commit -m "メッセージ"：git addで貯めた変更内容をメッセージ付きで実際に保存
 │
-├git push origin main:リモートリポジトリの変更内容をローカルに反映
+├git push origin main:コミットの変更内容をリモートリポジトリに反映
 │
 └git pull origin main:リモートリポジトリの変更内容をローカルに反映
 
