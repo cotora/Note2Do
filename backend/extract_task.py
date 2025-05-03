@@ -34,7 +34,7 @@ def extract_task(text: str) -> Optional[Task]:
 
     # LangChain Geminiモデルの初期化
     llm = ChatGoogleGenerativeAI(
-        model="gemini-1.5-pro", google_api_key=api_key, temperature=0.1
+        model="gemini-2.0-flash", google_api_key=api_key, temperature=0.1
     )
 
     # Pydanticパーサーの設定
