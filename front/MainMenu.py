@@ -44,8 +44,8 @@ def mainMenu():
             "Select the year",
             [i for i in range(1,MAX_MONTH+1)])
         
-        st.session_state["selected_day"]=NIL
         # 初期化部分
+        st.session_state["selected_day"]=NIL
 
         ## 選択された月の1日を取得
         first_day=date(st.session_state["selected_year"],st.session_state["selected_month"],1)
@@ -125,9 +125,6 @@ def mainMenu():
             st.session_state["selected_day"]=clicked%100
             st.rerun()
     elif st.session_state.page=="Today_schedule" or st.session_state.page=="Timer" or st.session_state.page=="create_task_ui":
-        print(f"{st.session_state['selected_year']=}")
-        print(f"{st.session_state['selected_month']=}")
-        print(f"{st.session_state['selected_day']=}")
         Today_schedule(date(st.session_state["selected_year"],st.session_state["selected_month"],st.session_state["selected_day"]))
         #create_task_ui(datetime.datetime(st.session_state["selected_year"],st.session_state["selected_month"],st.session_state["selected_day"]))
     elif st.session_state.page=="input" or st.session_state.page=="result":

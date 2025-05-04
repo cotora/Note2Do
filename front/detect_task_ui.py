@@ -60,7 +60,8 @@ def detect_task_ui():
         # 戻るボタン
         if st.button("入力画面に戻る"):
             st.session_state["page"] = "input"
-            st.session_state.pop("tasks")
+            if "tasks" in st.session_state:
+                st.session_state.pop("tasks")
             st.rerun()
 
 if __name__ == "__main__":
