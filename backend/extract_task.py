@@ -1,21 +1,33 @@
 import os
 from datetime import datetime
-from typing import Optional
+from typing import List
 
+from dotenv import load_dotenv
 from langchain.output_parsers import PydanticOutputParser
 from langchain.prompts import PromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 from pydantic import BaseModel, ValidationError
-from dotenv import load_dotenv
 
 
 class Task(BaseModel):
+    """
+    タスク情報
+    """
+
     task_name: str
     start_time: datetime
     end_time: datetime
 
 
-def extract_task(text: str) -> Optional[Task]:
+class TaskList(BaseModel):
+    """
+    タスク情報のリスト
+    """
+
+    tasks: List[Task]
+
+
+def extract_task(text: str) -> List[Task]:
     """
     テキストからLLMを用いてタスクを抽出する
 
@@ -23,14 +35,14 @@ def extract_task(text: str) -> Optional[Task]:
         text (str): テキスト
 
     Returns:
-        Task|None: 抽出したタスク
+        List[Task]: 抽出したタスクのリスト
     """
     # APIキーの取得
     load_dotenv()
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
         print("環境変数GEMINI_API_KEYが設定されていません")
-        return None
+        return []
 
     # LangChain Geminiモデルの初期化
     llm = ChatGoogleGenerativeAI(
@@ -38,18 +50,19 @@ def extract_task(text: str) -> Optional[Task]:
     )
 
     # Pydanticパーサーの設定
-    parser = PydanticOutputParser(pydantic_object=Task)
+    parser = PydanticOutputParser(pydantic_object=TaskList)
 
     # プロンプトの作成
     prompt_template = """
-    以下のテキストからタスク情報を抽出してください。
+    以下のテキストから全てのタスク情報を抽出してください。
     
     テキスト: {text}
     
-    必ずタスク名、開始時間、終了時間の3つの情報を抽出してください。
+    各タスクごとに、タスク名、開始時間、終了時間の3つの情報を抽出してください。
     日時はISO 8601形式（例：2023-05-10T10:00:00）で出力してください。
     
-    もし与えられたテキストにタスクに関連する情報が含まれていない場合は、「タスク情報なし」と明示してください。
+    複数のタスクが含まれている場合は、全てのタスクを抽出してください。
+    もし与えられたテキストにタスクに関連する情報が含まれていない場合は、空のタスクリストを返してください。
     
     {format_instructions}
     """
@@ -71,15 +84,31 @@ def extract_task(text: str) -> Optional[Task]:
 
         # タスク情報がない場合の処理
         if "タスク情報なし" in str(content):
-            return None
+            return []
 
         # 回答を解析
         try:
-            return parser.parse(str(content))
-        except ValidationError:
-            print("タスク情報の解析に失敗しました")
-            return None
+            task_list = parser.parse(str(content))
+            return task_list.tasks
+        except ValidationError as e:
+            print(f"タスク情報の解析に失敗しました: {e}")
+            return []
 
     except Exception as e:
         print(f"タスク抽出エラー: {e}")
-        return None
+        return []
+
+
+if __name__ == "__main__":
+    text = """
+    ポスターセッションは5月15日（木）18:00〜20:00に学内カフェテリアにて実施予定です。
+    参加希望者は5月10日（土）までに応募フォームから登録をお願いいたします。
+    また、全体ミーティングは5月12日（月）10:00〜11:30に会議室Aで行います。
+    """
+    tasks = extract_task(text)
+    for i, task in enumerate(tasks):
+        print(f"タスク {i + 1}:")
+        print(f"  タスク名: {task.task_name}")
+        print(f"  開始時間: {task.start_time}")
+        print(f"  終了時間: {task.end_time}")
+        print()
