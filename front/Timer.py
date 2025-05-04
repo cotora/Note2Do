@@ -3,7 +3,7 @@ import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 
 def Timer():
-    st.set_page_config(page_title="タイマー", layout="wide")
+    #st.set_page_config(page_title="タイマー", layout="wide")
     # ── セッションステートの初期化 ──
     if 'running' not in st.session_state:
         st.session_state.running = False
