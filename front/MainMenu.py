@@ -124,11 +124,11 @@ def mainMenu():
             st.session_state.page="input_hand"
             st.session_state.selected_day=clicked%100
             st.rerun()
-    elif False and st.session_state.page=="input_hand":
+    elif st.session_state.page=="input_hand":
         create_task_ui(datetime.datetime(st.session_state.selected_year,st.session_state.selected_month,st.session_state.selected_day))
-    elif False and st.session_state.page=="input":
+    elif st.session_state.page=="input":
         detect_task_ui()
-    elif False and st.session_state.page=="Today_schedule":
+    elif st.session_state.page=="Today_schedule" or st.session_state.page=="Timer" or st.session_state.page=="create_task_ui":
         Today_schedule()
 
 # サイドバー関連
@@ -172,17 +172,17 @@ with st.sidebar:
         if st.button("① カレンダー"):
             logDebug("カレンダーボタン押下")#ユーザー入力記録
             st.session_state.page="MainMenu"#カレンダー画面の呼び出し
-            st.switch_page("MainMenu.py")
+            #st.switch_page("MainMenu.py")
             pass
         if st.button("② 今日のタスク"):
             logDebug("今日のタスクボタン押下")#ユーザー入力記録
             st.session_state.page="Today_schedule"#今日のタスク画面の呼び出し
-            st.switch_page("Today_schedule.py")
+            #st.switch_page("Today_schedule.py")
             pass
         if st.button("③ 音声認識タスク登録"):
             logDebug("音声認識タスク登録")#ユーザー入力記録
             st.session_state.page="input"#音声認識画面の呼び出し
-            st.switch_page("detect_task_ui.py")
+            #st.switch_page("detect_task_ui.py")
             pass
 
 if __name__=="__main__":

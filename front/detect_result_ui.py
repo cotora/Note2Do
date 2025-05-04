@@ -5,7 +5,9 @@ from datetime import datetime
 import streamlit as st
 
 # パスを追加して親ディレクトリのモジュールをインポートできるようにする
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.insert(
+    0,os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
 from backend.extract_task import extract_task
 from backend.manipulate_db import DuplicateTaskError, insert_task
 
