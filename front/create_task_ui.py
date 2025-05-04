@@ -6,8 +6,8 @@ from datetime import time
 import streamlit as st
 
 # パスを追加して親ディレクトリのモジュールをインポートできるようにする
-sys.path.insert(
-    0,os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 )
 
 # sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -94,11 +94,8 @@ def create_task_ui(cur_date: datetime.date):
     with col2:
         if st.button("タスク作成", use_container_width=True, type="primary"):
             # タスク名のバリデーション
-            if not st.session_state.task_name:
+            if not task_name:
                 st.error("タスク名を入力してください")
-            # 時刻のバリデーション
-            elif st.session_state.start_time >= st.session_state.end_time:
-                st.error("終了時刻は開始時刻より後に設定してください")
             else:
                 try:
                     # 現在選択されている日付と入力された時間を組み合わせる
@@ -110,10 +107,10 @@ def create_task_ui(cur_date: datetime.date):
 
                     # 開始時刻と終了時刻を作成
                     start_datetime = datetime.datetime.combine(
-                        task_date, st.session_state.start_time
+                        task_date, start_time
                     )
                     end_datetime = datetime.datetime.combine(
-                        task_date, st.session_state.end_time
+                        task_date, end_time
                     )
 
                     # データベースにタスクを登録
@@ -126,9 +123,6 @@ def create_task_ui(cur_date: datetime.date):
 
                     # 成功メッセージを表示
                     st.success("タスクが作成されました")
-
-                    # タスク名をクリア
-                    st.session_state.task_name = ""
 
                 except DuplicateTaskError as e:
                     # 重複エラーの場合
