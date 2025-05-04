@@ -151,6 +151,7 @@ def get_task_by_date(target_date: date) -> list[DB_Task]:
         SELECT id, task_name, start_date, end_date, result_time
         FROM tasks
         WHERE start_date >= ? AND start_date < ?
+        ORDER BY start_date ASC
     """,
         (start_of_day, end_of_day),
     )
