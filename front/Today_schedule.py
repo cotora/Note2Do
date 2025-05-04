@@ -2,6 +2,7 @@ import streamlit as st
 from datetime import datetime
 
 from Timer import Timer
+from create_task_ui import create_task_ui
 
 if "page" not in st.session_state:
     st.session_state.page="Today_schedule"
@@ -86,18 +87,29 @@ def Today_schedule():
                 pass
             
             # メニューボタン
-            cols[4].button("…", key=f"menu_{i}", help='タスク編集画面へ移動') #機能追加予定ポイント：タスク編集画面へ移動する機能の追加
+            if cols[4].button("…", key=f"menu_{i}", help='タスク編集画面へ移動'):
+                st.session_state.page="create_task_ui"
+                st.rerun()
+                pass
 
             st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
     elif st.session_state.page=="Timer":
         Timer()
+
+    elif st.session_state.page=="create_task_ui":
+        sampledata = datetime(2025, 5, 4) #改善予定
+        create_task_ui(sampledata)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
     # --- 下部の追加ボタン ---
     c1, c2, c3 = st.columns([1,1,1])
     with c2:
-        st.button("＋", key="add_task", help='タスク作成画面へ') #機能追加予定ポイント：タスク作成画面へ移動する機能の追加
+        if st.button("＋", key="add_task", help='タスク作成画面へ'):
+            st.session_state.page="create_task_ui"
+            st.rerun()
+            pass
+
 
 
 
