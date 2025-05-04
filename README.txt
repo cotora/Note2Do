@@ -22,6 +22,10 @@ streamlitを使う方針
 
 ・Streamlit 関連
 st.columns(cols):cols列だけstを取得でき，ボタンの行列を作成可能
+st.rerun():再読み込み
+
+・設計メモ
+MainMenu.pyが呼び出される為，if文を駆使し，関数化したページを呼び出して制御
 
 ・WSL+GitHub連携
 _GHコマンドを見てみる．

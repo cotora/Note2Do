@@ -1,14 +1,15 @@
 from datetime import time
+import datetime
 
 import streamlit as st
 
 
-def create_task_ui():
+def create_task_ui(id:datetime.datetime):
     """
     タスクを手動で作成するUI
     """
     # ページ全体のレイアウトを中央寄せに
-    st.set_page_config(layout="centered")
+    #st.set_page_config(layout="centered")
 
     # タイトル（非表示）
     # st.title("タスク登録")
@@ -20,6 +21,9 @@ def create_task_ui():
     # スペースを追加
     st.write("")
     st.write("")
+
+    # 榮留により追加
+    st.write(f"{st.session_state.selected_year}年{st.session_state.selected_month}月{st.session_state.selected_day}日")
 
     # 開始時刻と終了時刻を横に並べる
     col1, col2 = st.columns(2)
