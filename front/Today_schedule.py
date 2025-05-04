@@ -15,8 +15,8 @@ from backend.manipulate_db import get_task_by_date, DB_Task
 
 if "page" not in st.session_state:
     st.session_state.page="Today_schedule"
-
-def Today_schedule():
+today = date.today()
+def Today_schedule(date=today):
     # ページ設定
     #st.set_page_config(layout="wide")
 
@@ -26,8 +26,8 @@ def Today_schedule():
         # --- セッションステートに DB から取得したタスクをセット ---
         if "tasks" not in st.session_state:
             # 今日の日付でタスクを取得
-            today = date.today()
-            db_tasks: list[DB_Task] = get_task_by_date(today)
+            
+            db_tasks: list[DB_Task] = get_task_by_date(date)
 
             # DB_Task -> 辞書型に変換（時刻は "HH:MM" 文字列に整形）
             st.session_state.tasks = [
@@ -83,7 +83,7 @@ def Today_schedule():
             highlight_cls = "highlight" if start_time <= now <= end_time else ""
 
             # レイアウト：[チェック, 名前, 時刻, メニュー]
-            cols = st.columns([0.5, 3, 4, 1, 1]) 
+            cols = st.columns([0.5, 3, 4, 1]) 
             cols[0].write("")  # チェック位置合わせ
 
             # タスク名
@@ -106,11 +106,11 @@ def Today_schedule():
                 #switch_page使って切り替えするなら：st.switch_page('Timer')
                 pass
             
-            # メニューボタン
-            if cols[4].button("…", key=f"menu_{i}", help='タスク編集画面へ移動'):
-                st.session_state.page="create_task_ui"
-                st.rerun()
-                pass
+            # メニューボタン いったんなし
+            # if cols[4].button("…", key=f"menu_{i}", help='タスク編集画面へ移動'):
+            #     st.session_state.page="create_task_ui"
+            #     st.rerun()
+            #     pass
 
             st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
     elif st.session_state.page=="Timer":
