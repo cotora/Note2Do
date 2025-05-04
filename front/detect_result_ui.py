@@ -23,10 +23,10 @@ def detect_result_ui(input_text: str):
     # set_page_configは親ページで設定する必要があるため削除
 
     # タスク状態の管理
-    if "tasks" not in st.session_state:
+    if "tasks_s" not in st.session_state:
         # 初回表示時にタスクを抽出
-        st.session_state["tasks"] = extract_task(input_text)
-        st.session_state["tasks"] = [task for task in st.session_state["tasks"] if task.start_date.date() == task.end_date.date() and task.start_date.time() <= task.end_date.time()]
+        st.session_state["tasks_s"] = extract_task(input_text)
+        st.session_state["tasks_s"] = [task for task in st.session_state["tasks_s"] if task.start_date.date() == task.end_date.date() and task.start_date.time() <= task.end_date.time()]
 
     # 入力値の変更をタスクに反映する関数
     def update_task_name(idx):
@@ -36,7 +36,7 @@ def detect_result_ui(input_text: str):
         Args:
             idx (int): タスクのインデックス
         """
-        st.session_state["tasks"][idx].task_name = st.session_state[f"task_name_{idx}"]
+        st.session_state["tasks_s"][idx].task_name = st.session_state[f"task_name_{idx}"]
 
     def update_task_date(idx):
         """
@@ -46,14 +46,14 @@ def detect_result_ui(input_text: str):
             idx (int): タスクのインデックス
         """
         # 日付が変更されたら開始日時と終了日時の日付部分を更新
-        old_start = st.session_state["tasks"][idx].start_date
-        old_end = st.session_state["tasks"][idx].end_date
+        old_start = st.session_state["tasks_s"][idx].start_date
+        old_end = st.session_state["tasks_s"][idx].end_date
         # 新しい日付と元の時間を組み合わせる
         new_date = st.session_state[f"date_{idx}"]
-        st.session_state["tasks"][idx].start_date = datetime.combine(
+        st.session_state["tasks_s"][idx].start_date = datetime.combine(
             new_date, old_start.time()
         )
-        st.session_state["tasks"][idx].end_date = datetime.combine(
+        st.session_state["tasks_s"][idx].end_date = datetime.combine(
             new_date, old_end.time()
         )
 
@@ -65,19 +65,19 @@ def detect_result_ui(input_text: str):
             idx (int): タスクのインデックス
         """
         # 開始時間が変更されたら開始日時の時間部分を更新
-        old_start = st.session_state["tasks"][idx].start_date
+        old_start = st.session_state["tasks_s"][idx].start_date
         # 元の日付と新しい時間を組み合わせる
         new_time = st.session_state[f"start_time_{idx}"]
         new_start_datetime = datetime.combine(old_start.date(), new_time)
 
         # 終了時刻より後になっていないかチェック
-        end_datetime = st.session_state["tasks"][idx].end_date
+        end_datetime = st.session_state["tasks_s"][idx].end_date
         if new_start_datetime > end_datetime:
             # エラーメッセージを表示
             st.session_state[f"start_time_{idx}"] = old_start.time()
         else:
             # 有効な時間なので更新
-            st.session_state["tasks"][idx].start_date = new_start_datetime
+            st.session_state["tasks_s"][idx].start_date = new_start_datetime
 
     def update_task_end_time(idx):
         """
@@ -87,30 +87,30 @@ def detect_result_ui(input_text: str):
             idx (int): タスクのインデックス
         """
         # 終了時間が変更されたら終了日時の時間部分を更新
-        old_end = st.session_state["tasks"][idx].end_date
+        old_end = st.session_state["tasks_s"][idx].end_date
         # 元の日付と新しい時間を組み合わせる
         new_time = st.session_state[f"end_time_{idx}"]
         new_end_datetime = datetime.combine(old_end.date(), new_time)
 
         # 開始時刻より前になっていないかチェック
-        start_datetime = st.session_state["tasks"][idx].start_date
+        start_datetime = st.session_state["tasks_s"][idx].start_date
         if new_end_datetime < start_datetime:
             st.session_state[f"end_time_{idx}"] = old_end.time()
         else:
             # 有効な値なので更新
-            st.session_state["tasks"][idx].end_date = new_end_datetime
+            st.session_state["tasks_s"][idx].end_date = new_end_datetime
 
     # タイトル
     st.header("認識結果")
 
     # タスクの表示
-    if len(st.session_state["tasks"]) == 0:
+    if len(st.session_state["tasks_s"]) == 0:
         st.error("タスク情報が見つかりませんでした")
     else:
-        st.success(f"{len(st.session_state['tasks'])}件のタスクが見つかりました")
+        st.success(f"{len(st.session_state['tasks_s'])}件のタスクが見つかりました")
 
         # 各タスクを表示
-        for i, task in enumerate(st.session_state["tasks"]):
+        for i, task in enumerate(st.session_state["tasks_s"]):
             with st.container(border=True):
                 st.subheader(f"タスク {i + 1}")
 
@@ -179,7 +179,7 @@ def detect_result_ui(input_text: str):
                         help="このタスクを削除します",
                         use_container_width=True,
                     ):
-                        st.session_state["tasks"].pop(i)
+                        st.session_state["tasks_s"].pop(i)
                         st.rerun()
 
         # スペースを追加
@@ -194,7 +194,7 @@ def detect_result_ui(input_text: str):
                 success_count = 0
                 duplicate_count = 0
 
-                for task in st.session_state["tasks"]:
+                for task in st.session_state["tasks_s"]:
                     try:
                         insert_task(
                             task.task_name, task.start_date, task.end_date, None
