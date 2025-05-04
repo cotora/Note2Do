@@ -190,3 +190,22 @@ if __name__ == "__main__":
     )
     today_tasks = get_task_by_date(date.today())
     print(f"今日のタスク: {today_tasks}")
+
+
+def add_result_time(task_id: int, result_time: int):
+    """
+    タスクの結果時間を追加する
+
+    Args:
+        task_id (int): タスクID
+        result_time (int): 結果時間
+
+    Raises:
+        ValueError: タスクが見つからない場合
+    """
+    conn = sqlite3.connect("tasks.db", detect_types=sqlite3.PARSE_DECLTYPES)
+    cursor = conn.cursor()
+    cursor.execute("UPDATE tasks SET result_time = ? WHERE id = ?", (result_time, task_id))
+    conn.commit()
+    cursor.close()
+    conn.close()
