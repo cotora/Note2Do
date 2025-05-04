@@ -45,3 +45,27 @@ streamlit run front/MainMenu.py
 ## 技術スタック
 開発で使用した技術スタックは以下のようになっています
 ![技術スタック](https://github.com/cotora/trachjob_team_p/blob/main/public/tech_stach_note2do.png?raw=true)
+
+## デモ画像
+タスク一覧
+![技術スタック](https://github.com/cotora/trachjob_team_p/blob/main/public/Captures/01_Home.png?raw=true)
+![技術スタック](https://github.com/cotora/trachjob_team_p/blob/main/public/Captures/10_Today_schedule.png?raw=true)
+
+カレンダー
+![技術スタック](https://github.com/cotora/trachjob_team_p/blob/main/public/Captures/02_Main_Menu.png?raw=true)
+![技術スタック](https://github.com/cotora/trachjob_team_p/blob/main/public/Captures/03_date_changed.png?raw=true)
+![技術スタック](https://github.com/cotora/trachjob_team_p/blob/main/public/Captures/04_date_task.png?raw=true)
+
+タスク作成
+![技術スタック](https://github.com/cotora/trachjob_team_p/blob/main/public/Captures/04_date_task.png?raw=true)
+![技術スタック](https://github.com/cotora/trachjob_team_p/blob/main/public/Captures/05_create_task.png?raw=true)
+![技術スタック](https://github.com/cotora/trachjob_team_p/blob/main/public/Captures/06_task_created.png?raw=true)
+
+文章認識タスク生成機能
+![技術スタック](https://github.com/cotora/trachjob_team_p/blob/main/public/Captures/07_task_detect.png?raw=true)
+![技術スタック](https://github.com/cotora/trachjob_team_p/blob/main/public/Captures/08_task_detected.png?raw=true)
+![技術スタック](https://github.com/cotora/trachjob_team_p/blob/main/public/Captures/09_task_registered.png?raw=true)
+![技術スタック](https://github.com/cotora/trachjob_team_p/blob/main/public/Captures/10_Today_schedule.png?raw=true)
+
+タイマー機能
+![技術スタック](https://github.com/cotora/trachjob_team_p/blob/main/public/Captures/11_Timer.png?raw=true)
