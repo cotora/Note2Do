@@ -15,8 +15,8 @@ class Task(BaseModel):
     """
 
     task_name: str
-    start_time: datetime
-    end_time: datetime
+    start_date: datetime
+    end_date: datetime
 
 
 class TaskList(BaseModel):
@@ -109,6 +109,6 @@ if __name__ == "__main__":
     for i, task in enumerate(tasks):
         print(f"タスク {i + 1}:")
         print(f"  タスク名: {task.task_name}")
-        print(f"  開始時間: {task.start_time}")
-        print(f"  終了時間: {task.end_time}")
+        print(f"  開始時間: {task.start_date}")
+        print(f"  終了時間: {task.end_date}")
         print()

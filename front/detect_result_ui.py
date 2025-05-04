@@ -40,9 +40,9 @@ def detect_result_ui(input_text: str):
                 )
 
                 # タスクから日付と時間を取得
-                task_date = task.start_time.date()
-                task_start_time = task.start_time.time()
-                task_end_time = task.end_time.time()
+                task_date = task.start_date.date()
+                task_start_time = task.start_date.time()
+                task_end_time = task.end_date.time()
 
                 with date_col:
                     st.date_input(
