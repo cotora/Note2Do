@@ -8,7 +8,7 @@ if "page" not in st.session_state:
 
 def Today_schedule():
     # ページ設定
-    st.set_page_config(layout="wide")
+    #st.set_page_config(layout="wide")
 
     if st.session_state.page=="Today_schedule":
         # --- サンプルタスクの初期化 ---

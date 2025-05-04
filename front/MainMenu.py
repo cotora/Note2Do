@@ -6,14 +6,17 @@ import datetime
 from datetime import date,timedelta
 from create_task_ui import create_task_ui
 from detect_task_ui import detect_task_ui
+from Today_schedule import Today_schedule
+
+# ページ設定
+st.set_page_config(
+    page_title="Team P Application",
+    layout="centered"
+)
 
 # 最初の1回だけ呼び出す
 if "page" not in st.session_state:
-    # ページ設定
-    st.set_page_config(
-        page_title="カレンダー",
-        layout="centered"
-    )
+    st.session_state.page="MainMenu"
 
 # メインメニュー定義
 def mainMenu():
@@ -31,11 +34,8 @@ def mainMenu():
     if "selected_month" not in st.session_state:
         st.session_state.selected_month=date.today().month
     ## ユーザーが操作しているページ関連情報
-    if "page" not in st.session_state:
-        st.session_state.page="MainMenu"
     if "selected_day" not in st.session_state:
         st.session_state.selected_day=NIL
-
     if st.session_state.page=="MainMenu":
         ## 年，月，日を選んでもらう
         st.session_state.selected_year=st.selectbox(
@@ -129,6 +129,8 @@ def mainMenu():
         create_task_ui(datetime.datetime(st.session_state.selected_year,st.session_state.selected_month,st.session_state.selected_day))
     elif st.session_state.page=="input":
         detect_task_ui()
+    elif st.session_state.page=="Today_schedule":
+        Today_schedule()
 
 # サイドバー関連
 ## 関数定義
@@ -171,17 +173,14 @@ with st.sidebar:
         if st.button("① カレンダー"):
             logDebug("カレンダーボタン押下")#ユーザー入力記録
             st.session_state.page="MainMenu"#カレンダー画面の呼び出し
-            mainMenu()
-            st.rerun()
             pass
         if st.button("② 今日のタスク"):
             logDebug("今日のタスクボタン押下")#ユーザー入力記録
-            #今日のタスク画面の呼び出し
+            st.session_state.page="Today_schedule"#今日のタスク画面の呼び出し
             pass
         if st.button("③ 音声認識タスク登録"):
             logDebug("音声認識タスク登録")#ユーザー入力記録
             st.session_state.page="input"#音声認識画面の呼び出し
-            st.rerun()
             pass
 
 if __name__=="__main__":
