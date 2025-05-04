@@ -1,5 +1,6 @@
 import os
 import sys
+from datetime import datetime
 
 import streamlit as st
 
@@ -23,6 +24,55 @@ def detect_result_ui(input_text: str):
     if "tasks" not in st.session_state:
         # 初回表示時にタスクを抽出
         st.session_state["tasks"] = extract_task(input_text)
+        st.session_state["tasks"] = [task for task in st.session_state["tasks"] if task.start_date.date() == task.end_date.date() and task.start_date.time() <= task.end_date.time()]
+
+    # 入力値の変更をタスクに反映する関数
+    def update_task_name(idx):
+        st.session_state["tasks"][idx].task_name = st.session_state[f"task_name_{idx}"]
+
+    def update_task_date(idx):
+        # 日付が変更されたら開始日時と終了日時の日付部分を更新
+        old_start = st.session_state["tasks"][idx].start_date
+        old_end = st.session_state["tasks"][idx].end_date
+        # 新しい日付と元の時間を組み合わせる
+        new_date = st.session_state[f"date_{idx}"]
+        st.session_state["tasks"][idx].start_date = datetime.combine(
+            new_date, old_start.time()
+        )
+        st.session_state["tasks"][idx].end_date = datetime.combine(
+            new_date, old_end.time()
+        )
+
+    def update_task_start_time(idx):
+        # 開始時間が変更されたら開始日時の時間部分を更新
+        old_start = st.session_state["tasks"][idx].start_date
+        # 元の日付と新しい時間を組み合わせる
+        new_time = st.session_state[f"start_time_{idx}"]
+        new_start_datetime = datetime.combine(old_start.date(), new_time)
+
+        # 終了時刻より後になっていないかチェック
+        end_datetime = st.session_state["tasks"][idx].end_date
+        if new_start_datetime > end_datetime:
+            # エラーメッセージを表示
+            st.session_state[f"start_time_{idx}"] = old_start.time()
+        else:
+            # 有効な時間なので更新
+            st.session_state["tasks"][idx].start_date = new_start_datetime
+
+    def update_task_end_time(idx):
+        # 終了時間が変更されたら終了日時の時間部分を更新
+        old_end = st.session_state["tasks"][idx].end_date
+        # 元の日付と新しい時間を組み合わせる
+        new_time = st.session_state[f"end_time_{idx}"]
+        new_end_datetime = datetime.combine(old_end.date(), new_time)
+
+        # 開始時刻より前になっていないかチェック
+        start_datetime = st.session_state["tasks"][idx].start_date
+        if new_end_datetime < start_datetime:
+            st.session_state[f"end_time_{idx}"] = old_end.time()
+        else:
+            # 有効な値なので更新
+            st.session_state["tasks"][idx].end_date = new_end_datetime
 
     # タイトル
     st.header("認識結果")
@@ -50,39 +100,47 @@ def detect_result_ui(input_text: str):
                 task_end_time = task.end_date.time()
 
                 with date_col:
-                    st.date_input(
+                    _ = st.date_input(
                         f"日付_{i}",
                         value=task_date,
                         key=f"date_{i}",
                         label_visibility="collapsed",
+                        on_change=update_task_date,
+                        args=(i,),
                     )
 
                 with start_time_col:
-                    st.time_input(
+                    _ = st.time_input(
                         f"開始時間_{i}",
                         value=task_start_time,
                         key=f"start_time_{i}",
                         label_visibility="collapsed",
+                        on_change=update_task_start_time,
+                        args=(i,),
                     )
 
                 with time_separator_col:
                     st.write("～")
 
                 with end_time_col:
-                    st.time_input(
+                    _ = st.time_input(
                         f"終了時間_{i}",
                         value=task_end_time,
                         key=f"end_time_{i}",
                         label_visibility="collapsed",
+                        on_change=update_task_end_time,
+                        args=(i,),
                     )
 
                 # タスク名入力エリア
                 st.caption("タスク名")
-                st.text_input(
+                _ = st.text_input(
                     f"タスク名_{i}",
                     value=task.task_name,
                     key=f"task_name_{i}",
                     label_visibility="collapsed",
+                    on_change=update_task_name,
+                    args=(i,),
                 )
 
                 # 削除ボタン
