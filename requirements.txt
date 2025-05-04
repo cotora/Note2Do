@@ -1,19 +1,19 @@
 # タスク管理アプリケーションの依存関係
 
 # UI
-streamlit==1.45.0
-streamlit-autorefresh==1.0.1
+streamlit
+streamlit-autorefresh
 
 # LLM関連
-langchain==0.3.25
-langchain-core==0.3.58
-langchain-google-genai==2.1.4
-langchain-text-splitters==0.3.8
-google-generativeai>=0.6.0
+langchain
+langchain-core
+langchain-google-genai
+langchain-text-splitters
+google-generativeai
 
 # データモデル
-pydantic==2.11.4
-pydantic_core==2.33.2
+pydantic
+pydantic_core
 
 # 環境変数管理
-python-dotenv==1.1.0 
+python-dotenv 
