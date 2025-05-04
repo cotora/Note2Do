@@ -117,8 +117,7 @@ def Today_schedule(date=today):
         Timer()
 
     elif st.session_state.page=="create_task_ui":
-        sampledata = datetime(2025, 5, 4) #改善予定
-        create_task_ui(sampledata)
+        create_task_ui(date)
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -128,7 +127,6 @@ def Today_schedule(date=today):
         if st.button("＋", key="add_task", help='タスク作成画面へ'):
             st.session_state.page="create_task_ui"
             st.rerun()
-            #改善予定
             pass
 
 
