@@ -6,6 +6,7 @@ import streamlit as st
 # パスを追加して親ディレクトリのモジュールをインポートできるようにする
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from backend.extract_task import extract_task
+from backend.manipulate_db import DuplicateTaskError, insert_task
 
 
 def detect_result_ui(input_text: str):
@@ -18,18 +19,22 @@ def detect_result_ui(input_text: str):
     # ページ全体のレイアウトを中央寄せに
     # set_page_configは親ページで設定する必要があるため削除
 
+    # タスク状態の管理
+    if "tasks" not in st.session_state:
+        # 初回表示時にタスクを抽出
+        st.session_state["tasks"] = extract_task(input_text)
+
     # タイトル
     st.header("認識結果")
 
-    # 認識結果の抽出
-    tasks = extract_task(input_text)
-    if len(tasks) == 0:
+    # タスクの表示
+    if len(st.session_state["tasks"]) == 0:
         st.error("タスク情報が見つかりませんでした")
     else:
-        st.success(f"{len(tasks)}件のタスクが見つかりました")
+        st.success(f"{len(st.session_state['tasks'])}件のタスクが見つかりました")
 
         # 各タスクを表示
-        for i, task in enumerate(tasks):
+        for i, task in enumerate(st.session_state["tasks"]):
             with st.container(border=True):
                 st.subheader(f"タスク {i + 1}")
 
@@ -83,13 +88,15 @@ def detect_result_ui(input_text: str):
                 # 削除ボタン
                 delete_col1, delete_col2, delete_col3 = st.columns([1, 1, 1])
                 with delete_col2:
-                    st.button(
+                    if st.button(
                         "削除",
                         key=f"delete_button_{i}",
                         type="secondary",
                         help="このタスクを削除します",
                         use_container_width=True,
-                    )
+                    ):
+                        st.session_state["tasks"].pop(i)
+                        st.rerun()
 
         # スペースを追加
         st.write("")
@@ -98,8 +105,31 @@ def detect_result_ui(input_text: str):
         # OKボタン
         ok_col1, ok_col2, ok_col3 = st.columns([1, 1, 1])
         with ok_col2:
-            st.button("OK", type="primary", use_container_width=True)
+            if st.button("OK", type="primary", use_container_width=True):
+                # タスクをデータベースに保存
+                success_count = 0
+                duplicate_count = 0
+
+                for task in st.session_state["tasks"]:
+                    try:
+                        insert_task(
+                            task.task_name, task.start_date, task.end_date, None
+                        )
+                        success_count += 1
+                    except DuplicateTaskError as e:
+                        duplicate_count += 1
+                        st.warning(str(e))
+
+                if success_count > 0:
+                    st.success(f"{success_count}件のタスクを保存しました")
+
+                if duplicate_count > 0:
+                    st.warning(
+                        f"{duplicate_count}件のタスクは重複のため保存されませんでした"
+                    )
 
 
 if __name__ == "__main__":
-    detect_result_ui("ポスターセッションは5月15日（木）18:00〜20:00に学内カフェテリアにて実施予定です。")
+    detect_result_ui(
+        "ポスターセッションは5月15日（木）18:00〜20:00に学内カフェテリアにて実施予定です。"
+    )
