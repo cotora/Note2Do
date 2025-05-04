@@ -24,7 +24,7 @@ def Today_schedule(date=today):
 
         # --- サンプルタスクの初期化 ---
         # --- セッションステートに DB から取得したタスクをセット ---
-        if "tasks" not in st.session_state:
+        if "tasks" not in st.session_state or True:
             # 今日の日付でタスクを取得
             
             db_tasks: list[DB_Task] = get_task_by_date(date)
@@ -40,7 +40,6 @@ def Today_schedule(date=today):
             ]
             # チェックボックスの状態も同数だけ用意
             st.session_state.checked = [False] * len(st.session_state.tasks)
-
         # --- 共通CSS ---
         st.markdown("""
         <style>
@@ -64,6 +63,8 @@ def Today_schedule(date=today):
         # --- タスク一覧描画 ---
         st.markdown('<div style="max-height:300px; overflow-y:auto">', unsafe_allow_html=True)
         st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
+
+        st.title(f"{date.year}年{date.month}月{date.day}日")
 
         for i, task in enumerate(st.session_state.tasks):
             # チェックボックス
