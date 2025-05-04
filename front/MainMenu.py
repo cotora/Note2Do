@@ -9,6 +9,7 @@ NIL=-1
 MAX_MONTH=12
 DAYS_ON_WEEK=7
 MIN_SELECTED_YEAR=1990
+MAX_SELECTED_YEAR=date.today().year+10
 
 # ページ設定
 st.set_page_config(
@@ -26,7 +27,7 @@ if "selected_month" not in st.session_state:
 ## 年，月，日を選んでもらう
 st.session_state.selected_year=st.selectbox(
     "Select the year",
-    [i for i in range(MIN_SELECTED_YEAR,date.today().year+1)])
+    [i for i in range(MIN_SELECTED_YEAR,MAX_SELECTED_YEAR+1)])
 
 st.session_state.selected_month=st.selectbox(
     "Select the year",
@@ -118,7 +119,23 @@ month_info[now_row][now_weekday]=count
 # メイン部分
 
 ## 月をタイトルとして表示
-st.title(f"{first_day.month} 月")
+st.title(f"{st.session_state.selected_year}年 {st.session_state.selected_month} 月")
+
+## 今日がカレンダーに描画されているか否か
+today_existed=(st.session_state.selected_year==date.today().year and st.session_state.selected_month==date.today().month)
+
+# CSS（1回だけ）: ボタンにクラスを追加するための仕込み
+st.markdown("""
+<style>
+div[data-testid="column"] > div:has(button.today-button) > button {
+    background-color: #4CAF50 !important;
+    color: white !important;
+    font-weight: bold;
+    border: 2px solid #0f0 !important;
+    border-radius: 8px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 clicked=NIL
 ## カレンダー形式でボタン表示
@@ -127,8 +144,19 @@ for i in range(len(month_info)):
     for j in range(DAYS_ON_WEEK):
         if month_info[i][j]!=NIL:
             button_id=first_day.year*10000+first_day.month*100+month_info[i][j] #ボタンIDは年月日をそのまま並べたもので
-            if button_col[j].button(str(month_info[i][j])):
-                clicked=button_id
+            if today_existed and month_info[i][j]==date.today().day:
+                html = f"""
+                    <script>
+                    var btn = window.parent.document.querySelectorAll('button[data-testid="{button_id}"]');
+                    if (btn.length > 0) btn[0].classList.add("today-button");
+                    </script>
+                """
+                if button_col[j].button(str(month_info[i][j]),key=button_id):
+                    clicked=button_id
+                st.markdown(html, unsafe_allow_html=True)
+            else:
+                if button_col[j].button(str(month_info[i][j]),key=button_id):
+                    clicked=button_id
 
 if clicked!=NIL:
     logDebug(str(clicked)) #ユーザー入力記録
