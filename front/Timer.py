@@ -43,6 +43,8 @@ def Timer():
             st.session_state.completed_time = (h, m)
             st.success(f"完了時刻を保存 → {h:02d}:{m:02d}")
             # 追加予定：st.switch_page('Today_schedule')
+            st.session_state.page="Today_schedule"
+            st.rerun()
 
     # ── 中段：タイマー表示 ──
     total = st.session_state.elapsed
