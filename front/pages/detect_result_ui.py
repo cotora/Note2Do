@@ -28,9 +28,21 @@ def detect_result_ui(input_text: str):
 
     # 入力値の変更をタスクに反映する関数
     def update_task_name(idx):
+        """
+        タスク名を変更する関数
+
+        Args:
+            idx (int): タスクのインデックス
+        """
         st.session_state["tasks"][idx].task_name = st.session_state[f"task_name_{idx}"]
 
     def update_task_date(idx):
+        """
+        日付が変更されたら開始日時と終了日時の日付部分を更新
+
+        Args:
+            idx (int): タスクのインデックス
+        """
         # 日付が変更されたら開始日時と終了日時の日付部分を更新
         old_start = st.session_state["tasks"][idx].start_date
         old_end = st.session_state["tasks"][idx].end_date
@@ -44,6 +56,12 @@ def detect_result_ui(input_text: str):
         )
 
     def update_task_start_time(idx):
+        """
+        開始時間が変更されたら開始日時の時間部分を更新
+
+        Args:
+            idx (int): タスクのインデックス
+        """
         # 開始時間が変更されたら開始日時の時間部分を更新
         old_start = st.session_state["tasks"][idx].start_date
         # 元の日付と新しい時間を組み合わせる
@@ -60,6 +78,12 @@ def detect_result_ui(input_text: str):
             st.session_state["tasks"][idx].start_date = new_start_datetime
 
     def update_task_end_time(idx):
+        """
+        終了時間が変更されたら終了日時の時間部分を更新
+
+        Args:
+            idx (int): タスクのインデックス
+        """
         # 終了時間が変更されたら終了日時の時間部分を更新
         old_end = st.session_state["tasks"][idx].end_date
         # 元の日付と新しい時間を組み合わせる
