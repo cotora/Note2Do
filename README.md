@@ -44,4 +44,4 @@ streamlit run front/MainMenu.py
 
 ## 技術スタック
 開発で使用した技術スタックは以下のようになっています
-![技術スタック]("https://github.com/cotora/trachjob_team_p/blob/img_place/public/tech_stach_note2do.png?raw=true" "技術スタック")
+![技術スタック]('https://github.com/cotora/trachjob_team_p/blob/main/public/tech_stach_note2do.png?raw=true')
