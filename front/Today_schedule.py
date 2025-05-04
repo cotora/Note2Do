@@ -1,10 +1,17 @@
 import streamlit as st
 from datetime import datetime
 from datetime import date
+import sys
+import os
+
+# パスを追加して親ディレクトリのモジュールをインポートできるようにする
+sys.path.insert(
+    0,os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
 
 from Timer import Timer
 from create_task_ui import create_task_ui
-from trachjob_team_p.backend.manipulate_db import get_task_by_date, DB_Task
+from backend.manipulate_db import get_task_by_date, DB_Task
 
 if "page" not in st.session_state:
     st.session_state.page="Today_schedule"
