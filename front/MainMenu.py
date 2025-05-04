@@ -31,27 +31,27 @@ def mainMenu():
     # 日時設定関連
     ## ユーザーが指定している年，月の設定
     if "selected_year" not in st.session_state:
-        st.session_state.selected_year=date.today().year
+        st.session_state["selected_year"]=date.today().year
     if "selected_month" not in st.session_state:
-        st.session_state.selected_month=date.today().month
+        st.session_state["selected_month"]=date.today().month
     ## ユーザーが操作しているページ関連情報
     if "selected_day" not in st.session_state:
-        st.session_state.selected_day=date.today().day
+        st.session_state["selected_day"]=date.today().day
     if st.session_state.page=="MainMenu":
         ## 年，月，日を選んでもらう
-        st.session_state.selected_year=st.selectbox(
+        st.session_state["selected_year"]=st.selectbox(
             "Select the year",
             [i for i in range(MIN_SELECTED_YEAR,MAX_SELECTED_YEAR+1)])
 
-        st.session_state.selected_month=st.selectbox(
+        st.session_state["selected_month"]=st.selectbox(
             "Select the year",
             [i for i in range(1,MAX_MONTH+1)])
         
-        st.session_state.selected_day=NIL
+        st.session_state["selected_day"]=NIL
         # 初期化部分
 
         ## 選択された月の1日を取得
-        first_day=date(st.session_state.selected_year,st.session_state.selected_month,1)
+        first_day=date(st.session_state["selected_year"],st.session_state["selected_month"],1)
 
         ## 選択されたの1日の曜日を，日曜：0，月曜：1，...として取得
         now_weekday=(first_day.weekday()+1)%DAYS_ON_WEEK
@@ -83,10 +83,10 @@ def mainMenu():
         # メイン部分
 
         ## 月をタイトルとして表示
-        st.title(f"{st.session_state.selected_year}年 {st.session_state.selected_month} 月")
+        st.title(f"{st.session_state["selected_year"]}年 {st.session_state["selected_month"]} 月")
 
         ## 今日がカレンダーに描画されているか否か
-        today_existed=(st.session_state.selected_year==date.today().year and st.session_state.selected_month==date.today().month)
+        today_existed=(st.session_state["selected_year"]==date.today().year and st.session_state["selected_month"]==date.today().month)
 
         # CSS（1回だけ）: ボタンにクラスを追加するための仕込み
         st.markdown("""
@@ -125,11 +125,14 @@ def mainMenu():
         if clicked!=NIL:
             logDebug(str(clicked)) #ユーザー入力記録
             st.session_state.page="Today_schedule"
-            st.session_state.selected_day=clicked%100
+            st.session_state["selected_day"]=clicked%100
             st.rerun()
     elif st.session_state.page=="Today_schedule" or st.session_state.page=="Timer" or st.session_state.page=="create_task_ui":
-        Today_schedule(date(st.session_state.selected_year,st.session_state.selected_month,st.session_state.selected_day))
-        #create_task_ui(datetime.datetime(st.session_state.selected_year,st.session_state.selected_month,st.session_state.selected_day))
+        print(f"{st.session_state['selected_year']=}")
+        print(f"{st.session_state['selected_month']=}")
+        print(f"{st.session_state['selected_day']=}")
+        Today_schedule(date(st.session_state["selected_year"],st.session_state["selected_month"],st.session_state["selected_day"]))
+        #create_task_ui(datetime.datetime(st.session_state["selected_year"],st.session_state["selected_month"],st.session_state["selected_day"]))
     elif st.session_state.page=="input" or st.session_state.page=="result":
         detect_task_ui()
 
@@ -180,9 +183,9 @@ with st.sidebar:
             logDebug("今日のタスクボタン押下")#ユーザー入力記録
             st.session_state.page="Today_schedule"#今日のタスク画面の呼び出し
             today=date.today()
-            st.session_state.selected_year=today.year
-            st.session_state.selected_month=today.month
-            st.session_state.selected_day=today.day
+            st.session_state["selected_year"]=today.year
+            st.session_state["selected_month"]=today.month
+            st.session_state["selected_day"]=today.day
             #st.switch_page("Today_schedule.py")
             pass
         if st.button("③ 音声認識タスク登録"):
