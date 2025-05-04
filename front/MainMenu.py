@@ -1,6 +1,3 @@
-'''
-Edited By Eidome Kou (2025/5/3)
-'''
 import streamlit as st
 import datetime
 from datetime import date,timedelta
