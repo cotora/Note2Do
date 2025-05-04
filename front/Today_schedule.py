@@ -1,8 +1,10 @@
 import streamlit as st
 from datetime import datetime
+from datetime import date
 
 from Timer import Timer
 from create_task_ui import create_task_ui
+from trachjob_team_p.backend.manipulate_db import get_task_by_date, DB_Task
 
 if "page" not in st.session_state:
     st.session_state.page="Today_schedule"
@@ -12,14 +14,24 @@ def Today_schedule():
     #st.set_page_config(layout="wide")
 
     if st.session_state.page=="Today_schedule":
+
         # --- サンプルタスクの初期化 ---
+        # --- セッションステートに DB から取得したタスクをセット ---
         if "tasks" not in st.session_state:
-            st.session_state.tasks = [ #機能追加予定ポイント：辞書データ又はネストごとデータベースから受け取る
-                {"name": "Task1", "start": "00:00", "end": "10:00"},
-                {"name": "Task2", "start": "10:05", "end": "11:30"},
-                {"name": "Task3", "start": "11:35", "end": "14:00"},
-                {"name": "Task4", "start": "14:10", "end": "23:59"},
+            # 今日の日付でタスクを取得
+            today = date.today()
+            db_tasks: list[DB_Task] = get_task_by_date(today)
+
+            # DB_Task -> 辞書型に変換（時刻は "HH:MM" 文字列に整形）
+            st.session_state.tasks = [
+                {
+                    "name":     t.task_name,
+                    "start":    t.start_date.strftime("%H:%M"),
+                    "end":      t.end_date.strftime("%H:%M"),
+                }
+                for t in db_tasks
             ]
+            # チェックボックスの状態も同数だけ用意
             st.session_state.checked = [False] * len(st.session_state.tasks)
 
         # --- 共通CSS ---
@@ -84,6 +96,7 @@ def Today_schedule():
             if cols[3].button("⏲", key=f"timer_{i}", help='タイマー画面へ移動'):
                 st.session_state.page="Timer"
                 st.rerun()
+                #switch_page使って切り替えするなら：st.switch_page('Timer')
                 pass
             
             # メニューボタン
@@ -108,6 +121,7 @@ def Today_schedule():
         if st.button("＋", key="add_task", help='タスク作成画面へ'):
             st.session_state.page="create_task_ui"
             st.rerun()
+            #改善予定
             pass
 
 

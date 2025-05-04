@@ -16,4 +16,4 @@ pydantic
 pydantic_core
 
 # 環境変数管理
-python-dotenv 
+python-dotenv

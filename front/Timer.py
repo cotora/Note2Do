@@ -2,8 +2,11 @@ import time
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 
+#from Today_schedule import Today_schedule
+
 def Timer():
     #st.set_page_config(page_title="タイマー", layout="wide")
+
     # ── セッションステートの初期化 ──
     if 'running' not in st.session_state:
         st.session_state.running = False
@@ -39,6 +42,7 @@ def Timer():
             m = (st.session_state.elapsed % 3600) // 60
             st.session_state.completed_time = (h, m)
             st.success(f"完了時刻を保存 → {h:02d}:{m:02d}")
+            # 追加予定：st.switch_page('Today_schedule')
 
     # ── 中段：タイマー表示 ──
     total = st.session_state.elapsed
