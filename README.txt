@@ -26,6 +26,11 @@ st.rerun():再読み込み
 
 ・設計メモ
 MainMenu.pyが呼び出される為，if文を駆使し，関数化したページを呼び出して制御
+    _ページ遷移管理：st.session.pageの値で管理
+        "MainMenu":メインメニュー
+        "input_hand":create_task_ui.pyへ
+        "input":detect_task_ui.pyへ
+st.set_page_configは最初の1回しか呼び出せないので，MainMenu.pyのみ呼び出すように変更
 
 ・WSL+GitHub連携
 _GHコマンドを見てみる．

@@ -5,6 +5,7 @@ import streamlit as st
 import datetime
 from datetime import date,timedelta
 from create_task_ui import create_task_ui
+from detect_task_ui import detect_task_ui
 
 # 最初の1回だけ呼び出す
 if "page" not in st.session_state:
@@ -121,11 +122,13 @@ def mainMenu():
 
         if clicked!=NIL:
             logDebug(str(clicked)) #ユーザー入力記録
-            st.session_state.page="input"
+            st.session_state.page="input_hand"
             st.session_state.selected_day=clicked%100
             st.rerun()
-    elif st.session_state.page=="input":
+    elif st.session_state.page=="input_hand":
         create_task_ui(datetime.datetime(st.session_state.selected_year,st.session_state.selected_month,st.session_state.selected_day))
+    elif st.session_state.page=="input":
+        detect_task_ui()
 
 # サイドバー関連
 ## 関数定義
@@ -177,7 +180,8 @@ with st.sidebar:
             pass
         if st.button("③ 音声認識タスク登録"):
             logDebug("音声認識タスク登録")#ユーザー入力記録
-            #音声認識画面の呼び出し
+            st.session_state.page="input"#音声認識画面の呼び出し
+            st.rerun()
             pass
 
 if __name__=="__main__":

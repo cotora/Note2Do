@@ -15,7 +15,7 @@ def detect_task_ui():
         st.session_state["page"] = "input"
 
     # ページ全体のレイアウトを中央寄せに
-    st.set_page_config(layout="centered")
+    #st.set_page_config(layout="centered")
 
     # 入力ページの表示
     if st.session_state["page"] == "input":
