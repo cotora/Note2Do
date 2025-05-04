@@ -17,6 +17,8 @@ if "page" not in st.session_state:
         layout="centered"
     )
 
+print(f"{st.session_state.page=}")
+
 # メインメニュー定義
 def mainMenu():
     # 定数宣言
@@ -34,7 +36,7 @@ def mainMenu():
         st.session_state.selected_month=date.today().month
     ## ユーザーが操作しているページ関連情報
     if "selected_day" not in st.session_state:
-        st.session_state.selected_day=NIL
+        st.session_state.selected_day=date.today().day
     if st.session_state.page=="MainMenu":
         ## 年，月，日を選んでもらう
         st.session_state.selected_year=st.selectbox(
@@ -44,7 +46,8 @@ def mainMenu():
         st.session_state.selected_month=st.selectbox(
             "Select the year",
             [i for i in range(1,MAX_MONTH+1)])
-
+        
+        st.session_state.selected_day=NIL
         # 初期化部分
 
         ## 選択された月の1日を取得
@@ -121,15 +124,14 @@ def mainMenu():
 
         if clicked!=NIL:
             logDebug(str(clicked)) #ユーザー入力記録
-            st.session_state.page="input_hand"
+            st.session_state.page="Today_schedule"
             st.session_state.selected_day=clicked%100
             st.rerun()
-    elif st.session_state.page=="input_hand":
-        create_task_ui(datetime.datetime(st.session_state.selected_year,st.session_state.selected_month,st.session_state.selected_day))
-    elif st.session_state.page=="input":
-        detect_task_ui()
     elif st.session_state.page=="Today_schedule" or st.session_state.page=="Timer" or st.session_state.page=="create_task_ui":
-        Today_schedule()
+        Today_schedule(date(st.session_state.selected_year,st.session_state.selected_month,st.session_state.selected_day))
+        #create_task_ui(datetime.datetime(st.session_state.selected_year,st.session_state.selected_month,st.session_state.selected_day))
+    elif st.session_state.page=="input" or st.session_state.page=="result":
+        detect_task_ui()
 
 # サイドバー関連
 ## 関数定義
@@ -177,6 +179,10 @@ with st.sidebar:
         if st.button("② 今日のタスク"):
             logDebug("今日のタスクボタン押下")#ユーザー入力記録
             st.session_state.page="Today_schedule"#今日のタスク画面の呼び出し
+            today=date.today()
+            st.session_state.selected_year=today.year
+            st.session_state.selected_month=today.month
+            st.session_state.selected_day=today.day
             #st.switch_page("Today_schedule.py")
             pass
         if st.button("③ 音声認識タスク登録"):
