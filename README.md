@@ -1,4 +1,5 @@
-# trachjob_team_p
+# Note2Do
+
 ## アプリの概要
 マルチタスクを行っている方を対象とし，
 * 予定管理が難しい
@@ -14,3 +15,33 @@
 * タイマーの計測機能をデータベースに追加する
     * 各タスクにかかった時間の記録をグラフなどを用いてビジュアル化
 * 日にち部分にアイコン表示など，カレンダーをパッと見てその日のタスクを簡単に確認できるようにする機能の実装
+
+## 実行方法
+
+### ライブラリのインストール
+以下のコマンドを打つと実行に必要なライブラリがインストールされます
+```shell
+pip install -r requirements.txt
+```
+
+### gemini APIキーの設定
+取得したAPIキーを`.env`ファイルに以下の形式で設定します
+```
+GEMINI_API_KEY=<APIキー>
+```
+
+### データベースの作成
+以下のコマンドを実行するとアプリで利用するデータベースが作成されます
+```shell
+python backend/create_db.py
+```
+
+### アプリのローカル実行
+以下のコマンドでアプリをローカルで開くことができます
+```shell
+streamlit run front/MainMenu.py
+```
+
+## 技術スタック
+開発で使用した技術スタックは以下のようになっています
+![技術スタック]("https://github.com/cotora/trachjob_team_p/blob/img_place/public/tech_stach_note2do.png?raw=true" "技術スタック")
