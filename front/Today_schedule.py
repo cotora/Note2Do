@@ -8,6 +8,13 @@ sys.path.insert(
 import streamlit as st
 from datetime import datetime
 from datetime import date
+import sys
+import os
+
+# パスを追加して親ディレクトリのモジュールをインポートできるようにする
+sys.path.insert(
+    0,os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
 
 from Timer import Timer
 from create_task_ui import create_task_ui
