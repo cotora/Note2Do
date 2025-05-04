@@ -15,8 +15,8 @@ from backend.manipulate_db import get_task_by_date, DB_Task
 
 if "page" not in st.session_state:
     st.session_state.page="Today_schedule"
-today = date.today()
-def Today_schedule(date=today):
+def Today_schedule(date=date.today()):
+    print(f"{date=}")
     # ページ設定
     #st.set_page_config(layout="wide")
 
@@ -24,22 +24,24 @@ def Today_schedule(date=today):
 
         # --- サンプルタスクの初期化 ---
         # --- セッションステートに DB から取得したタスクをセット ---
-        if "tasks" not in st.session_state or True:
             # 今日の日付でタスクを取得
             
-            db_tasks: list[DB_Task] = get_task_by_date(date)
+        db_tasks: list[DB_Task] = get_task_by_date(date)
 
-            # DB_Task -> 辞書型に変換（時刻は "HH:MM" 文字列に整形）
-            st.session_state.tasks = [
-                {
-                    "name":     t.task_name,
-                    "start":    t.start_date.strftime("%H:%M"),
-                    "end":      t.end_date.strftime("%H:%M"),
-                }
-                for t in db_tasks
-            ]
-            # チェックボックスの状態も同数だけ用意
-            st.session_state.checked = [False] * len(st.session_state.tasks)
+        print(f"{db_tasks=}")
+
+        # DB_Task -> 辞書型に変換（時刻は "HH:MM" 文字列に整形）
+        st.session_state.tasks_l = [
+            {
+                "name":     t.task_name,
+                "start":    t.start_date.strftime("%H:%M"),
+                "end":      t.end_date.strftime("%H:%M"),
+            }
+            for t in db_tasks
+        ]
+        # チェックボックスの状態も同数だけ用意
+        st.session_state.checked = [False] * len(st.session_state.tasks_l)
+
         # --- 共通CSS ---
         st.markdown("""
         <style>
@@ -64,9 +66,7 @@ def Today_schedule(date=today):
         st.markdown('<div style="max-height:300px; overflow-y:auto">', unsafe_allow_html=True)
         st.markdown('<div class="divider"></div>', unsafe_allow_html=True)
 
-        st.title(f"{date.year}年{date.month}月{date.day}日")
-
-        for i, task in enumerate(st.session_state.tasks):
+        for i, task in enumerate(st.session_state.tasks_l):
             # チェックボックス
             checked = st.checkbox("", value=st.session_state.checked[i], key=f"chk_{i}")
             st.session_state.checked[i] = checked
