@@ -58,7 +58,7 @@ def create_task_ui(cur_date: datetime.date):
     st.write("")
     st.write("")
 
-    # 榮留により追加
+    # 日付情報を表示
     st.write(f"{cur_date.year}年{cur_date.month}月{cur_date.day}日")
 
     # 開始時刻と終了時刻を横に並べる
