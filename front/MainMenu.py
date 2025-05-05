@@ -124,10 +124,10 @@ def mainMenu():
             st.session_state.page="Today_schedule"
             st.session_state["selected_day"]=clicked%100
             st.rerun()
-    elif st.session_state.page=="Today_schedule" or st.session_state.page=="Timer" or st.session_state.page=="create_task_ui":
+    elif st.session_state.page=="Today_schedule" or st.session_state.page=="Timer" or st.session_state.page=="create_task_ui":# page変数で制御
         Today_schedule(date(st.session_state["selected_year"],st.session_state["selected_month"],st.session_state["selected_day"]))
         #create_task_ui(datetime.datetime(st.session_state["selected_year"],st.session_state["selected_month"],st.session_state["selected_day"]))
-    elif st.session_state.page=="input" or st.session_state.page=="result":
+    elif st.session_state.page=="input" or st.session_state.page=="result":# page変数で制御
         detect_task_ui()
 
 # サイドバー関連
